@@ -7,12 +7,25 @@ use std::{
 use crate::vm::Vm;
 use error::DiabloError;
 
+use crate::chunk::{Chunk, Op, Value};
+
+mod chunk;
 mod error;
 mod vm;
+mod debug;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
     let mut vm = Vm::new();
+
+    // test disassembler
+    let mut chunk = Chunk::new();
+    let c1 = chunk.add_constant(Value::Number(1.2));
+    let c2 = chunk.add_constant(Value::Number(3.4));
+    chunk.write(Op::Constant(c1.try_into().unwrap()), 123);
+    chunk.write(Op::Constant(c2.try_into().unwrap()), 124);
+
+    debug::disassemble_chunk(&chunk, "chunk");
 
     match args.len() {
         1 => repl(&mut vm),

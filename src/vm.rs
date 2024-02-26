@@ -4,7 +4,7 @@ pub struct Vm {}
 
 impl Vm {
     pub fn new() -> Self {
-        let mut vm = Self {};
+        let vm = Self {};
         vm
     }
 
