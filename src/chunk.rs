@@ -1,8 +1,10 @@
+pub type Value = f64;
+
 #[derive(Debug)]
 pub struct Chunk {
     pub code: Vec<Op>,
     pub constants: Vec<Value>,
-    pub lines: Vec<Run>,
+    pub lines: Vec<usize>,
 }
 
 impl Chunk {
@@ -14,47 +16,32 @@ impl Chunk {
         }
     }
 
-    pub fn write(&self, op: Op, line: usize) {
-        self.code.push(op);
-        if let Some(last) = self.lines.last_mut() {
-            if last.line == line {
-                last.count += 1
-                return;
-            }
-        }
+    pub fn read(&self, index: usize) -> Op {
+        self.code[index]
+    }
 
-        self.lines.push(Run::new(line, 1));
+    pub fn write(&mut self, op: Op, line: usize) {
+        self.code.push(op);
+        self.lines.push(line);
     }
 
     pub fn read_constant(&self, index: u8) -> Value {
-        return self.constants[index as usize];
+        self.constants[index as usize]
     }
 
     pub fn add_constant(&mut self, value: Value) -> usize {
         self.constants.push(value);
-        return self.constants.len() - 1;
+        self.constants.len()
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub enum Op {
     Constant(u8),
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
+    Negate,
     Return,
-}
-
-#[derive(Debug, Clone, Copy)]
-pub enum Value {
-    Number(f64),
-}
-
-#[derive(Debug)]
-pub struct Run {
-    line: usize,
-    count: usize,
-}
-
-impl Run {
-    fn new(line: usize, count: usize) -> Self {
-        Self { line, count }
-    }
 }
