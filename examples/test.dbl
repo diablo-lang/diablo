@@ -1,0 +1,21 @@
+fn test(x, y) {
+  let z = !x;
+
+  if (!(x or y) or (!nil and !z)) {
+    print("OR");
+  } else {
+    print("NOT OR");
+  }
+
+  if (x and !y) {
+    print("AND");
+  }
+
+  return 0;
+}
+
+let x = true;
+let y = nil;
+
+let res = test(x, y);
+print(res);
